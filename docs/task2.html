@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>応用課題② 分類表示 | VBA 基礎</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  code { background:#f0f0f0; padding:.1rem .35rem; border-radius:3px; font-family:Consolas,monospace; font-size:.88rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="site-title" href="index.html">⚙ VBA プログラミング基礎</a>
+  <nav>
+    <a href="index.html">ホーム</a>
+    <a href="step1a.html">1A</a>
+    <a href="step1b.html">1B</a>
+    <a href="task1.html">課題①</a>
+    <a href="step2a.html">2A</a>
+    <a href="step2b.html">2B</a>
+    <a href="task2.html">課題②</a>
+  </nav>
+</header>
+
+<div class="page-hero" style="background:linear-gradient(135deg,#2a7a56,var(--green))">
+  <div class="tag">応用課題② &nbsp;|&nbsp; 難易度 ★★★</div>
+  <h1>分類表示（If〜Else）</h1>
+  <div class="stars">組み合わせ：If〜Else ＋ 複数列出力 &nbsp;・&nbsp; 日本語手順 ＋ 穴埋め</div>
+</div>
+
+<main>
+  <p class="breadcrumb"><a href="index.html">ホーム</a> &rsaquo; 応用課題② 分類表示</p>
+
+  <div class="card">
+    <h3 data-icon="📖">状況説明</h3>
+    <p>STEP 2 の仕上げとして、偶数と奇数を<strong>別々の列に振り分ける</strong>プログラムを完成させましょう。</p>
+    <p style="margin-top:.5rem"><code>If〜Else</code> を使って、条件によって処理を分岐させる方法を練習します。</p>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="📋">プログラムの仕様</h3>
+    <ol class="step-list">
+      <li>ユーザーに「n（何まで調べるか）」を入力してもらう</li>
+      <li><strong>偶数</strong>は A列（rowA 行目）に表示し、rowA を 1 増やす</li>
+      <li><strong>奇数</strong>は B列（rowB 行目）に表示し、rowB を 1 増やす</li>
+    </ol>
+    <p style="margin-top:.8rem;font-weight:bold;">例）n = 10 の場合</p>
+    <table class="spec-table" style="max-width:340px;margin-top:.5rem">
+      <thead><tr><th>A列（偶数）</th><th>B列（奇数）</th></tr></thead>
+      <tbody>
+        <tr><td>2</td><td>1</td></tr>
+        <tr><td>4</td><td>3</td></tr>
+        <tr><td>6</td><td>5</td></tr>
+        <tr><td>8</td><td>7</td></tr>
+        <tr><td>10</td><td>9</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="🔀">If〜Else の構造</h3>
+    <div class="code-wrap">
+      <div class="code-header"><span>VBA 構文</span></div>
+      <table class="code-table">
+        <tr><td class="ln">—</td><td><span class="kw">If</span> 条件 <span class="kw">Then</span></td></tr>
+        <tr><td class="ln">—</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt">' 条件が True のときの処理</span></td></tr>
+        <tr><td class="ln">—</td><td><span class="kw">Else</span></td></tr>
+        <tr><td class="ln">—</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt">' 条件が False のときの処理</span></td></tr>
+        <tr><td class="ln">—</td><td><span class="kw">End If</span></td></tr>
+      </table>
+    </div>
+    <p style="margin-top:.7rem;font-size:.9rem">条件が True（偶数）→ A列に入れる、False（奇数）→ B列に入れる、という分岐を作ります。</p>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="✏️">課題 1　日本語で処理の流れを書こう</h3>
+    <p style="margin-bottom:.7rem">a = 1, 2, 3 のとき、それぞれどの列に入るか日本語で説明してみましょう。</p>
+    <div style="background:var(--blue-lt);border-radius:6px;padding:.8rem 1rem;font-size:.88rem;color:#555;margin-bottom:.8rem">
+      例：「a = 2 のとき、<code>2 Mod 2 = 0</code> なので偶数 → A列の rowA 行目に 2 を入れ、rowA を 1 増やす」
+    </div>
+    <details>
+      <summary style="cursor:pointer;color:var(--blue);font-weight:bold;padding:.3rem 0">▶ 解答例を見る</summary>
+      <div style="margin-top:.6rem;padding:.8rem;background:var(--blue-lt);border-radius:6px;font-size:.9rem">
+        <p>a = 1：<code>1 Mod 2 = 1</code> → 奇数 → B1 に 1 を入れ、rowB = 2 にする</p>
+        <p>a = 2：<code>2 Mod 2 = 0</code> → 偶数 → A1 に 2 を入れ、rowA = 2 にする</p>
+        <p>a = 3：<code>3 Mod 2 = 1</code> → 奇数 → B2 に 3 を入れ、rowB = 3 にする</p>
+        <p style="margin-top:.4rem">…n まで繰り返す</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="🔧">課題 2　コードの穴埋めをしよう</h3>
+    <p style="margin-bottom:.8rem">薄黄の行の <code>[　 ]</code> に当てはまるコードを書いて完成させましょう。</p>
+    <div class="code-wrap">
+      <div class="code-header"><span>VBA (Excel マクロ)</span><span>Sub ClassifyNumbers</span></div>
+      <table class="code-table">
+        <tr><td class="ln">1</td><td><span class="kw">Sub</span> <span class="fn">ClassifyNumbers</span>()</td></tr>
+        <tr><td class="ln">2</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> n    <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">3</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> a    <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> rowA <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> rowB <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">6</td><td>&nbsp;&nbsp;&nbsp;&nbsp;n = <span class="fn">InputBox</span>(<span class="str">"いくつまで調べますか？"</span>)</td></tr>
+        <tr><td class="ln">7</td><td>&nbsp;&nbsp;&nbsp;&nbsp;rowA = <span class="num">1</span> : rowB = <span class="num">1</span></td></tr>
+        <tr><td class="ln">8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> n</td></tr>
+        <tr class="hole-line"><td class="ln">9</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">If</span> a <span class="kw">Mod</span> <span class="num">2</span> = [&nbsp;&nbsp;&nbsp;] <span class="kw">Then</span></td></tr>
+        <tr class="hole-line"><td class="ln">10</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(rowA, <span class="num">1</span>).Value = [&nbsp;&nbsp;&nbsp;]</td></tr>
+        <tr><td class="ln">11</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rowA = rowA + <span class="num">1</span></td></tr>
+        <tr><td class="ln">12</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Else</span></td></tr>
+        <tr class="hole-line"><td class="ln">13</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(rowB, <span class="num">2</span>).Value = [&nbsp;&nbsp;&nbsp;]</td></tr>
+        <tr><td class="ln">14</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rowB = rowB + <span class="num">1</span></td></tr>
+        <tr><td class="ln">15</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">End If</span></td></tr>
+        <tr><td class="ln">16</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Next</span> a</td></tr>
+        <tr><td class="ln">17</td><td><span class="kw">End Sub</span></td></tr>
+      </table>
+    </div>
+    <details style="margin-top:.8rem">
+      <summary style="cursor:pointer;color:var(--blue);font-weight:bold;padding:.3rem 0">▶ 穴埋めの答えを見る</summary>
+      <div style="margin-top:.6rem;padding:.8rem;background:var(--blue-lt);border-radius:6px">
+        <p>9行目：<code>If a Mod 2 = <strong>0</strong> Then</code>　← 偶数条件</p>
+        <p style="margin-top:.3rem">10行目：<code>Cells(rowA, 1).Value = <strong>a</strong></code>　← A列に a を入れる</p>
+        <p style="margin-top:.3rem">13行目：<code>Cells(rowB, 2).Value = <strong>a</strong></code>　← B列に a を入れる</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="dl-banner">
+    <div class="dl-info"><strong>📄 ワークシート（Word）</strong><span>印刷して使用できます（A4 サイズ）</span></div>
+    <a class="btn btn-download" href="downloads/task2_classification.docx" download>⬇ ダウンロード</a>
+  </div>
+
+  <div class="page-nav">
+    <a class="prev" href="step2b.html"><span class="sub">前のステップ</span><br>STEP 2-B 奇数表示</a>
+    <a class="next" href="index.html"><span class="sub">ホームに戻る</span><br>カリキュラム一覧</a>
+  </div>
+</main>
+
+<footer>VBA プログラミング基礎 学習サイト &nbsp;|&nbsp; ビジネス系高等学校 プログラミング実務コース</footer>
+</body>
+</html>

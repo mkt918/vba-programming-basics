@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEP 2-A 偶数表示 | VBA 基礎</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <a class="site-title" href="index.html">⚙ VBA プログラミング基礎</a>
+  <nav>
+    <a href="index.html">ホーム</a>
+    <a href="step1a.html">1A</a>
+    <a href="step1b.html">1B</a>
+    <a href="task1.html">課題①</a>
+    <a href="step2a.html">2A</a>
+    <a href="step2b.html">2B</a>
+    <a href="task2.html">課題②</a>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <div class="tag">STEP 2-A &nbsp;|&nbsp; 難易度 ★★★</div>
+  <h1>偶数表示（If 文・Mod 演算子）</h1>
+  <div class="stars">新しい概念：If 文による条件分岐 ＋ Mod 演算子で余りを求める</div>
+</div>
+
+<main>
+  <p class="breadcrumb"><a href="index.html">ホーム</a> &rsaquo; STEP 2-A 偶数表示</p>
+
+  <div class="card">
+    <h3 data-icon="📖">状況説明</h3>
+    <p>太郎さんは「1 〜 n の中から<strong>偶数だけ</strong>を A列に取り出して表示する」プログラムを作りました。</p>
+    <p style="margin-top:.5rem">しかし実行してみると、偶数ではなく<strong>奇数</strong>が表示されてしまいます。</p>
+    <p style="margin-top:.5rem">グループで原因を調べて、正しいプログラムに直してみましょう。</p>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="🔢">Mod 演算子とは？</h3>
+    <p style="margin-bottom:.7rem">Mod は<strong>割り算の余り</strong>を求める演算子です。</p>
+    <table class="spec-table" style="max-width:360px">
+      <thead><tr><th>式</th><th>意味</th><th>結果の例</th></tr></thead>
+      <tbody>
+        <tr><td><code>4 Mod 2</code></td><td>4 ÷ 2 の余り</td><td>0（偶数）</td></tr>
+        <tr><td><code>5 Mod 2</code></td><td>5 ÷ 2 の余り</td><td>1（奇数）</td></tr>
+        <tr><td><code>a Mod 2 = 0</code></td><td>a が偶数のとき True</td><td>—</td></tr>
+        <tr><td><code>a Mod 2 = 1</code></td><td>a が奇数のとき True</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="📋">プログラムの仕様</h3>
+    <ol class="step-list">
+      <li>ユーザーに「n（何まで調べるか）」を入力してもらう</li>
+      <li>1 〜 n の中から<strong>偶数だけ</strong>を A列に上から順に表示する</li>
+    </ol>
+    <p style="margin-top:.8rem;font-weight:bold;">例）n = 10 の場合</p>
+    <table class="spec-table" style="max-width:280px;margin-top:.5rem">
+      <thead><tr><th>セル</th><th>表示値（偶数のみ）</th></tr></thead>
+      <tbody>
+        <tr><td>A1</td><td>2</td></tr>
+        <tr><td>A2</td><td>4</td></tr>
+        <tr><td>A3</td><td>6</td></tr>
+        <tr><td>A4</td><td>8</td></tr>
+        <tr><td>A5</td><td>10</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="🐛">バグのあるプログラム</h3>
+    <p style="color:#cc3333;font-size:.88rem;margin-bottom:.7rem">※ 薄赤の行にバグが仕込まれています。</p>
+    <div class="code-wrap">
+      <div class="code-header"><span>VBA (Excel マクロ)</span><span>Sub DisplayEven</span></div>
+      <table class="code-table">
+        <tr><td class="ln">1</td><td><span class="kw">Sub</span> <span class="fn">DisplayEven</span>()</td></tr>
+        <tr><td class="ln">2</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> n   <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">3</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> a   <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> row <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;n = <span class="fn">InputBox</span>(<span class="str">"いくつまで調べますか？"</span>)</td></tr>
+        <tr><td class="ln">6</td><td>&nbsp;&nbsp;&nbsp;&nbsp;row = <span class="num">1</span></td></tr>
+        <tr><td class="ln">7</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> n</td></tr>
+        <tr class="bug-line"><td class="ln">8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">If</span> a <span class="kw">Mod</span> <span class="num">2</span> = <span class="num">1</span> <span class="kw">Then</span><span class="bug-tag">← バグあり</span></td></tr>
+        <tr><td class="ln">9</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(row, <span class="num">1</span>).Value = a</td></tr>
+        <tr><td class="ln">10</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;row = row + <span class="num">1</span></td></tr>
+        <tr><td class="ln">11</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">End If</span></td></tr>
+        <tr><td class="ln">12</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Next</span> a</td></tr>
+        <tr><td class="ln">13</td><td><span class="kw">End Sub</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="👥">グループワーク</h3>
+    <div class="task-block">
+      <div class="task-head">【課題 1】予想してみよう</div>
+      <div class="task-body">n = 10 で実行したとき、A列にはどんな値が入ると思いますか？</div>
+    </div>
+    <div class="task-block">
+      <div class="task-head">【課題 2】バグを発見しよう</div>
+      <div class="task-body">
+        何行目が間違っていますか？　Mod 演算子の結果を踏まえて理由を説明しましょう。<br>
+        <span style="color:#888;font-size:.85rem">ヒント：偶数を Mod 2 すると余りはいくつ？</span>
+      </div>
+    </div>
+    <div class="task-block">
+      <div class="task-head">【課題 3】修正しよう</div>
+      <div class="task-body">正しいコードに書き直して、Excel で動作を確認しましょう。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-icon="💡">解説（確認後に開く）</h3>
+    <details>
+      <summary style="cursor:pointer;color:var(--blue);font-weight:bold;padding:.3rem 0">▶ バグの正解を見る</summary>
+      <div style="margin-top:.8rem;padding:.8rem;background:var(--blue-lt);border-radius:6px">
+        <p><strong>バグの場所：</strong>8行目 &nbsp;<code>If a Mod 2 = 1 Then</code></p>
+        <p style="margin-top:.5rem"><strong>理由：</strong><code>a Mod 2 = 1</code> は奇数の条件です。<br>
+        偶数は 2 で割り切れるので余りが <code>0</code> になります。<code>= 0</code> に直す必要があります。</p>
+        <div class="code-wrap" style="margin-top:.7rem">
+          <table class="code-table">
+            <tr><td class="ln">8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">If</span> a <span class="kw">Mod</span> <span class="num">2</span> = <span style="color:#a6e3a1;font-weight:bold">0</span> <span class="kw">Then</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="dl-banner">
+    <div class="dl-info"><strong>📄 ワークシート（Word）</strong><span>印刷して使用できます（A4 サイズ）</span></div>
+    <a class="btn btn-download" href="downloads/2a_even-numbers.docx" download>⬇ ダウンロード</a>
+  </div>
+
+  <div class="page-nav">
+    <a class="prev" href="task1.html"><span class="sub">前のステップ</span><br>応用課題① 複数列出力</a>
+    <a class="next" href="step2b.html"><span class="sub">次のステップ</span><br>STEP 2-B 奇数表示</a>
+  </div>
+</main>
+
+<footer>VBA プログラミング基礎 学習サイト &nbsp;|&nbsp; ビジネス系高等学校 プログラミング実務コース</footer>
+</body>
+</html>
