@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>応用課題① 複数列出力 | VBA 基礎</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .trace-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+  .trace-table th { background:var(--blue); color:#fff; padding:.45rem .5rem; text-align:center; }
+  .trace-table td { border:1px solid var(--border); padding:.4rem .5rem; text-align:center; }
+  .trace-table .sample { background:#f8f9fb; }
+  .trace-table .blank  { background:#fffde7; color:#aaa; }
+  .trace-table .end-row { background:var(--blue-lt); color:#666; font-style:italic; }
+  code { background:#f0f0f0; padding:.1rem .35rem; border-radius:3px; font-family:Consolas,monospace; font-size:.88rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="site-title" href="index.html">⚙ VBA プログラミング基礎</a>
+  <nav>
+    <a href="index.html">ホーム</a>
+    <a href="step1a.html">1A</a>
+    <a href="step1b.html">1B</a>
+    <a href="task1.html">課題①</a>
+  </nav>
+</header>
+
+<div class="page-hero" style="background:linear-gradient(135deg,#2a7a56,var(--green))">
+  <div class="tag">応用課題① &nbsp;|&nbsp; 難易度 ★★☆</div>
+  <h1>複数列出力（A列 ＋ B列）</h1>
+  <div class="stars">組み合わせ：複数処理 ＋ ループ内計算 &nbsp;・&nbsp; トレース表 ＋ 穴埋め</div>
+</div>
+
+<main>
+  <p class="breadcrumb"><a href="index.html">ホーム</a> &rsaquo; 応用課題① 複数列出力</p>
+
+  <!-- 状況説明 -->
+  <div class="card">
+    <h3 data-icon="📖">状況説明</h3>
+    <p>STEP 1-B で学んだプログラムをさらに発展させます。</p>
+    <p style="margin-top:.5rem">今回は「<strong>A列に連番</strong>」「<strong>B列にその2倍の値</strong>」を同時に表示するプログラムを完成させましょう。</p>
+    <p style="margin-top:.5rem">コードの穴埋めと、処理の流れを日本語で書く練習もします。</p>
+  </div>
+
+  <!-- 仕様 -->
+  <div class="card">
+    <h3 data-icon="📋">プログラムの仕様</h3>
+    <ol class="step-list">
+      <li>ユーザーに「n（何行まで出力するか）」を入力してもらう</li>
+      <li>A列（1列目）に 1, 2, 3, … n を順番に表示する</li>
+      <li>B列（2列目）に A列の値の <strong>2倍</strong> を表示する</li>
+    </ol>
+    <p style="margin-top:.8rem;font-weight:bold;">例）n = 5 の場合</p>
+    <table class="spec-table" style="max-width:340px;margin-top:.5rem">
+      <thead><tr><th>A列（連番）</th><th>B列（2倍）</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>2</td></tr>
+        <tr><td>2</td><td>4</td></tr>
+        <tr><td>3</td><td>6</td></tr>
+        <tr><td>4</td><td>8</td></tr>
+        <tr><td>5</td><td>10</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 課題1：日本語手順 -->
+  <div class="card">
+    <h3 data-icon="✏️">課題 1　日本語で処理の流れを書こう</h3>
+    <p style="margin-bottom:.8rem">ループの中で何をしているか、1ステップずつ日本語で書いてみましょう。</p>
+    <div style="background:var(--blue-lt);border-radius:6px;padding:.8rem 1rem;font-size:.88rem;color:#555;margin-bottom:.8rem">
+      例：「変数 a が 1 のとき、A1に <strong>1</strong> を、B1に <strong>2</strong> を入れる」
+    </div>
+    <details>
+      <summary style="cursor:pointer;color:var(--blue);font-weight:bold;padding:.3rem 0">▶ 解答例を見る</summary>
+      <div style="margin-top:.6rem;padding:.8rem;background:var(--blue-lt);border-radius:6px;font-size:.9rem">
+        <p>① a = 1 のとき：A1 に 1 を入れ、B1 に 1×2=2 を入れる</p>
+        <p>② a = 2 のとき：A2 に 2 を入れ、B2 に 2×2=4 を入れる</p>
+        <p>③ a = 3 のとき：A3 に 3 を入れ、B3 に 3×2=6 を入れる</p>
+        <p>④ … n になるまで繰り返す</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- 課題2：トレース表 -->
+  <div class="card">
+    <h3 data-icon="📊">課題 2　トレース表を完成させよう</h3>
+    <p style="margin-bottom:.8rem">1〜2行目は例として埋めてあります。<strong>3〜5行目</strong>（薄黄）を自分で埋めましょう。</p>
+    <div style="overflow-x:auto">
+      <table class="trace-table">
+        <thead>
+          <tr>
+            <th>a の値</th>
+            <th>For 条件<br>（a ≦ n?）</th>
+            <th>Cells(a,1)<br>A列に入る値</th>
+            <th>Cells(a,1)*2<br>B列に入る値</th>
+            <th>実行結果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="sample"><td>1</td><td>1 ≦ 5 ✓</td><td>1</td><td>2</td><td>A1=1, B1=2</td></tr>
+          <tr class="sample"><td>2</td><td>2 ≦ 5 ✓</td><td>2</td><td>4</td><td>A2=2, B2=4</td></tr>
+          <tr class="blank"><td>3</td><td></td><td></td><td></td><td></td></tr>
+          <tr class="blank"><td>4</td><td></td><td></td><td></td><td></td></tr>
+          <tr class="blank"><td>5</td><td></td><td></td><td></td><td></td></tr>
+          <tr class="end-row"><td>6</td><td>6 ≦ 5 ✗</td><td>—</td><td>—</td><td>ループ終了</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <details style="margin-top:.8rem">
+      <summary style="cursor:pointer;color:var(--blue);font-weight:bold;padding:.3rem 0">▶ トレース表の答えを見る</summary>
+      <div style="margin-top:.6rem;overflow-x:auto">
+        <table class="trace-table">
+          <thead>
+            <tr><th>a</th><th>For 条件</th><th>A列</th><th>B列</th><th>実行結果</th></tr>
+          </thead>
+          <tbody>
+            <tr class="sample"><td>1</td><td>1 ≦ 5 ✓</td><td>1</td><td>2</td><td>A1=1, B1=2</td></tr>
+            <tr class="sample"><td>2</td><td>2 ≦ 5 ✓</td><td>2</td><td>4</td><td>A2=2, B2=4</td></tr>
+            <tr class="sample"><td>3</td><td>3 ≦ 5 ✓</td><td>3</td><td>6</td><td>A3=3, B3=6</td></tr>
+            <tr class="sample"><td>4</td><td>4 ≦ 5 ✓</td><td>4</td><td>8</td><td>A4=4, B4=8</td></tr>
+            <tr class="sample"><td>5</td><td>5 ≦ 5 ✓</td><td>5</td><td>10</td><td>A5=5, B5=10</td></tr>
+            <tr class="end-row"><td>6</td><td>6 ≦ 5 ✗</td><td>—</td><td>—</td><td>ループ終了</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <!-- 課題3：穴埋め -->
+  <div class="card">
+    <h3 data-icon="🔧">課題 3　コードの穴埋めをしよう</h3>
+    <p style="margin-bottom:.8rem">薄黄の行の <code>[　　]</code> に当てはまるコードを書いて、プログラムを完成させましょう。</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span>VBA (Excel マクロ)</span>
+        <span>Sub DisplayMultiColumn</span>
+      </div>
+      <table class="code-table">
+        <tr><td class="ln">1</td><td><span class="kw">Sub</span> <span class="fn">DisplayMultiColumn</span>()</td></tr>
+        <tr><td class="ln">2</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> n <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">3</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> a <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;n = <span class="fn">InputBox</span>(<span class="str">"いくつまで表示しますか？"</span>)</td></tr>
+        <tr><td class="ln">5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> n</td></tr>
+        <tr class="hole-line"><td class="ln">6</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, <span class="num">1</span>).Value = [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</td></tr>
+        <tr class="hole-line"><td class="ln">7</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, <span class="num">2</span>).Value = [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</td></tr>
+        <tr><td class="ln">8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Next</span> a</td></tr>
+        <tr><td class="ln">9</td><td><span class="kw">End Sub</span></td></tr>
+      </table>
+    </div>
+    <details style="margin-top:.8rem">
+      <summary style="cursor:pointer;color:var(--blue);font-weight:bold;padding:.3rem 0">▶ 穴埋めの答えを見る</summary>
+      <div style="margin-top:.6rem;padding:.8rem;background:var(--blue-lt);border-radius:6px">
+        <p>6行目：<code>Cells(a, 1).Value = <strong>a</strong></code>　← A列に連番（a の値そのもの）</p>
+        <p style="margin-top:.4rem">7行目：<code>Cells(a, 2).Value = <strong>a * 2</strong></code>　← B列に2倍</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ダウンロード -->
+  <div class="dl-banner">
+    <div class="dl-info">
+      <strong>📄 ワークシート（Word）</strong>
+      <span>印刷して使用できます（A4 サイズ）</span>
+    </div>
+    <a class="btn btn-download" href="downloads/task1_multi-column.docx" download>⬇ ダウンロード</a>
+  </div>
+
+  <div class="page-nav">
+    <a class="prev" href="step1b.html"><span class="sub">前のステップ</span><br>STEP 1-B 連番表示</a>
+    <a class="next" href="index.html"><span class="sub">ホームに戻る</span><br>カリキュラム一覧</a>
+  </div>
+
+</main>
+
+<footer>
+  VBA プログラミング基礎 学習サイト &nbsp;|&nbsp; ビジネス系高等学校 プログラミング実務コース
+</footer>
+
+</body>
+</html>
