@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VBA 逆引きリファレンス | VBA 基礎</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* ── 検索バー ── */
+  .search-wrap {
+    background: linear-gradient(135deg, var(--blue-dk), var(--blue));
+    padding: 2rem 1rem 2.5rem;
+    text-align: center;
+  }
+  .search-wrap h1 { color: #fff; font-size: 1.6rem; margin-bottom: .4rem; }
+  .search-wrap p  { color: rgba(255,255,255,.8); font-size: .92rem; margin-bottom: 1.2rem; }
+  .search-box {
+    display: flex;
+    max-width: 560px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: .75rem 1.2rem;
+    font-size: 1rem;
+    font-family: "BIZ UDGothic", sans-serif;
+    background: transparent;
+  }
+  .search-box .clear-btn {
+    background: none;
+    border: none;
+    padding: 0 .8rem;
+    cursor: pointer;
+    color: #aaa;
+    font-size: 1.1rem;
+    display: none;
+  }
+
+  /* ── カテゴリフィルター ── */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: center;
+    padding: .8rem 1rem;
+    background: var(--blue-lt);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 60px;
+    z-index: 50;
+  }
+  .tag-btn {
+    padding: .3rem .85rem;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: .82rem;
+    cursor: pointer;
+    font-family: "BIZ UDGothic", sans-serif;
+    color: var(--text);
+    transition: all .15s;
+  }
+  .tag-btn:hover, .tag-btn.active {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+
+  /* ── リファレンスカード ── */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .ref-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    transition: box-shadow .15s;
+  }
+  .ref-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+  .ref-card.hidden { display: none; }
+
+  .ref-head {
+    background: var(--blue-lt);
+    border-bottom: 1px solid var(--border);
+    padding: .6rem .9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+  }
+  .ref-head .want {
+    font-size: .95rem;
+    font-weight: bold;
+    color: var(--blue);
+  }
+  .ref-head .cat-tag {
+    font-size: .72rem;
+    padding: .15rem .55rem;
+    border-radius: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cat-変数   { background: #e3f2fd; color: #1565c0; }
+  .cat-入力   { background: #f3e5f5; color: #6a1b9a; }
+  .cat-出力   { background: #e8f5e9; color: #2e7d32; }
+  .cat-ループ { background: #fff3e0; color: #e65100; }
+  .cat-条件   { background: #fce4ec; color: #c62828; }
+  .cat-演算   { background: #f1f8e9; color: #558b2f; }
+  .cat-文字列 { background: #e0f7fa; color: #00695c; }
+  .cat-その他 { background: #f5f5f5; color: #555; }
+
+  .ref-body { padding: .8rem .9rem; }
+  .ref-body .syntax-label {
+    font-size: .72rem;
+    color: var(--sub);
+    margin-bottom: .3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .ref-body .syntax {
+    background: #1e2433;
+    color: #cdd6f4;
+    font-family: "Consolas", monospace;
+    font-size: .88rem;
+    padding: .5rem .75rem;
+    border-radius: 6px;
+    margin-bottom: .7rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .ref-body .syntax .kw  { color: #89b4fa; }
+  .ref-body .syntax .str { color: #f9e2af; }
+  .ref-body .syntax .num { color: #fab387; }
+  .ref-body .syntax .cmt { color: #6c7086; font-style: italic; }
+  .ref-body .syntax .fn  { color: #a6e3a1; }
+  .ref-body .note {
+    font-size: .85rem;
+    color: var(--sub);
+    line-height: 1.6;
+  }
+  .ref-body .example-label {
+    font-size: .72rem;
+    color: var(--sub);
+    margin: .6rem 0 .3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .ref-body .example {
+    background: #2d3548;
+    color: #a6e3a1;
+    font-family: "Consolas", monospace;
+    font-size: .82rem;
+    padding: .45rem .7rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* ── 0件メッセージ ── */
+  #no-result {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--sub);
+  }
+  #no-result .emoji { font-size: 2.5rem; margin-bottom: .5rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="site-title" href="index.html">⚙ VBA プログラミング基礎</a>
+  <nav>
+    <a href="index.html">ホーム</a>
+    <a href="step1a.html">1A</a>
+    <a href="step1b.html">1B</a>
+    <a href="task1.html">課題①</a>
+    <a href="step2a.html">2A</a>
+    <a href="step2b.html">2B</a>
+    <a href="task2.html">課題②</a>
+    <a href="reference.html" style="color:#fff;font-weight:bold;">📖 逆引き</a>
+  </nav>
+</header>
+
+<!-- 検索バー -->
+<div class="search-wrap">
+  <h1>📖 VBA 逆引きリファレンス</h1>
+  <p>「やりたいこと」を入力すると、使うべき構文が見つかります</p>
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="例：セルに値を入れたい、繰り返したい、余りを求めたい…" autocomplete="off">
+    <button class="clear-btn" id="clear-btn" title="クリア">✕</button>
+  </div>
+</div>
+
+<!-- カテゴリフィルター -->
+<div class="filter-bar">
+  <button class="tag-btn active" data-cat="all">すべて</button>
+  <button class="tag-btn" data-cat="変数">変数・宣言</button>
+  <button class="tag-btn" data-cat="入力">入力</button>
+  <button class="tag-btn" data-cat="出力">セル出力</button>
+  <button class="tag-btn" data-cat="ループ">ループ</button>
+  <button class="tag-btn" data-cat="条件">条件分岐</button>
+  <button class="tag-btn" data-cat="演算">演算・計算</button>
+  <button class="tag-btn" data-cat="文字列">文字列</button>
+  <button class="tag-btn" data-cat="その他">その他</button>
+</div>
+
+<main>
+  <div id="no-result">
+    <div class="emoji">🔍</div>
+    <p>「<span id="no-result-word"></span>」に一致する項目が見つかりませんでした。</p>
+    <p style="font-size:.85rem;margin-top:.3rem">別のキーワードで試してみてください。</p>
+  </div>
+
+  <div class="ref-grid" id="ref-grid">
+
+    <!-- ── 変数・宣言 ── -->
+    <div class="ref-card" data-cat="変数" data-keywords="変数 宣言 整数 文字 数値 型 Dim Integer String Double Boolean">
+      <div class="ref-head">
+        <span class="want">変数を宣言したい</span>
+        <span class="cat-tag cat-変数">変数・宣言</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">Dim</span> 変数名 <span class="kw">As</span> 型</div>
+        <div class="note">よく使う型：<code>Integer</code>（整数）/ <code>Double</code>（小数）/ <code>String</code>（文字列）/ <code>Boolean</code>（True/False）</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="kw">Dim</span> n <span class="kw">As Integer</span>
+<span class="kw">Dim</span> name <span class="kw">As String</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="変数" data-keywords="変数 代入 値を入れる セット 設定">
+      <div class="ref-head">
+        <span class="want">変数に値を代入したい</span>
+        <span class="cat-tag cat-変数">変数・宣言</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">変数名 = 値</div>
+        <div class="note">= の左辺に変数名、右辺に入れたい値を書く。</div>
+        <div class="example-label">使用例</div>
+        <div class="example">n = <span class="num">10</span>
+name = <span class="str">"太郎"</span></div>
+      </div>
+    </div>
+
+    <!-- ── 入力 ── -->
+    <div class="ref-card" data-cat="入力" data-keywords="入力 ダイアログ キーボード ユーザー 受け取る 数値を入力 文字を入力 InputBox">
+      <div class="ref-head">
+        <span class="want">ユーザーに数値・文字を入力させたい</span>
+        <span class="cat-tag cat-入力">入力</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">変数名 = <span class="fn">InputBox</span>(<span class="str">"メッセージ"</span>)</div>
+        <div class="note">ダイアログボックスが表示され、入力した値を変数に格納できる。</div>
+        <div class="example-label">使用例</div>
+        <div class="example">n = <span class="fn">InputBox</span>(<span class="str">"いくつまで表示しますか？"</span>)</div>
+      </div>
+    </div>
+
+    <!-- ── セル出力 ── -->
+    <div class="ref-card" data-cat="出力" data-keywords="セル 値を入れる 出力 書き込む 表示 Cells">
+      <div class="ref-head">
+        <span class="want">セルに値を書き込みたい</span>
+        <span class="cat-tag cat-出力">セル出力</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">Cells(<span class="num">行</span>, <span class="num">列</span>).Value = 値</div>
+        <div class="note">行・列は数値で指定。列は A=1, B=2, C=3 …</div>
+        <div class="example-label">使用例</div>
+        <div class="example">Cells(<span class="num">1</span>, <span class="num">1</span>).Value = <span class="num">100</span>  <span class="cmt">' A1 に 100</span>
+Cells(a, <span class="num">2</span>).Value = a * <span class="num">2</span>   <span class="cmt">' B行目に 2倍</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="出力" data-keywords="セル アドレス A1 B2 Range 列名 行番号">
+      <div class="ref-head">
+        <span class="want">「A1」など列名でセルを指定したい</span>
+        <span class="cat-tag cat-出力">セル出力</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">Range(<span class="str">"セル番地"</span>).Value = 値</div>
+        <div class="note">Cells は数値指定、Range は "A1" など文字列で指定。どちらも使える。</div>
+        <div class="example-label">使用例</div>
+        <div class="example">Range(<span class="str">"A1"</span>).Value = <span class="str">"合計"</span>
+Range(<span class="str">"B2"</span>).Value = <span class="num">500</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="出力" data-keywords="セル 読み取り 取得 値を取り出す 参照">
+      <div class="ref-head">
+        <span class="want">セルの値を読み取りたい</span>
+        <span class="cat-tag cat-出力">セル出力</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">変数名 = Cells(<span class="num">行</span>, <span class="num">列</span>).Value</div>
+        <div class="note">セルの値を変数に取り込む。</div>
+        <div class="example-label">使用例</div>
+        <div class="example">x = Cells(<span class="num">1</span>, <span class="num">1</span>).Value  <span class="cmt">' A1 の値を x に</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="出力" data-keywords="セル クリア 削除 消す 空にする Clear">
+      <div class="ref-head">
+        <span class="want">セルの中身を消したい</span>
+        <span class="cat-tag cat-出力">セル出力</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">Cells(<span class="num">行</span>, <span class="num">列</span>).ClearContents</div>
+        <div class="note">値だけ消す。書式を含めて消すには <code>.Clear</code>。</div>
+        <div class="example-label">使用例</div>
+        <div class="example">Cells(<span class="num">1</span>, <span class="num">1</span>).ClearContents
+Range(<span class="str">"A1:B10"</span>).ClearContents</div>
+      </div>
+    </div>
+
+    <!-- ── ループ ── -->
+    <div class="ref-card" data-cat="ループ" data-keywords="繰り返し ループ 何度も For Next 回数 繰り返したい">
+      <div class="ref-head">
+        <span class="want">決まった回数だけ繰り返したい</span>
+        <span class="cat-tag cat-ループ">ループ</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">For</span> 変数 = 開始 <span class="kw">To</span> 終了
+    <span class="cmt">' 繰り返す処理</span>
+<span class="kw">Next</span> 変数</div>
+        <div class="note">変数が開始から終了まで 1 ずつ増えながら繰り返す。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> <span class="num">5</span>
+    Cells(a, <span class="num">1</span>).Value = a
+<span class="kw">Next</span> a</div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="ループ" data-keywords="繰り返し Step 飛ばし 2おきに 偶数 奇数 刻み">
+      <div class="ref-head">
+        <span class="want">2つ飛ばしなど刻み幅を変えて繰り返したい</span>
+        <span class="cat-tag cat-ループ">ループ</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">For</span> 変数 = 開始 <span class="kw">To</span> 終了 <span class="kw">Step</span> 刻み
+    <span class="cmt">' 繰り返す処理</span>
+<span class="kw">Next</span> 変数</div>
+        <div class="note">Step に負の数を使うと逆順にも繰り返せる。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="kw">For</span> a = <span class="num">2</span> <span class="kw">To</span> <span class="num">10</span> <span class="kw">Step</span> <span class="num">2</span>  <span class="cmt">' 2,4,6,8,10</span>
+    Cells(a / <span class="num">2</span>, <span class="num">1</span>).Value = a
+<span class="kw">Next</span> a</div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="ループ" data-keywords="ループ カウンタ 行番号 別変数 詰める 連番でないとき">
+      <div class="ref-head">
+        <span class="want">出力行をループ変数と別に管理したい</span>
+        <span class="cat-tag cat-ループ">ループ</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">Dim</span> row <span class="kw">As Integer</span>
+row = <span class="num">1</span>
+<span class="kw">For</span> a = 開始 <span class="kw">To</span> 終了
+    <span class="cmt">' 条件を満たすときだけ出力</span>
+    Cells(row, <span class="num">1</span>).Value = a
+    row = row + <span class="num">1</span>
+<span class="kw">Next</span> a</div>
+        <div class="note">偶数・奇数だけ表示するときなど、出力行を別カウンタで管理する。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="cmt">' 偶数だけ A列に詰めて表示</span>
+<span class="kw">Dim</span> row <span class="kw">As Integer</span> : row = <span class="num">1</span>
+<span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> n
+    <span class="kw">If</span> a <span class="kw">Mod</span> <span class="num">2</span> = <span class="num">0</span> <span class="kw">Then</span>
+        Cells(row, <span class="num">1</span>).Value = a
+        row = row + <span class="num">1</span>
+    <span class="kw">End If</span>
+<span class="kw">Next</span> a</div>
+      </div>
+    </div>
+
+    <!-- ── 条件分岐 ── -->
+    <div class="ref-card" data-cat="条件" data-keywords="条件 もし If Then 分岐 判定 場合">
+      <div class="ref-head">
+        <span class="want">条件によって処理を変えたい（If）</span>
+        <span class="cat-tag cat-条件">条件分岐</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">If</span> 条件 <span class="kw">Then</span>
+    <span class="cmt">' 条件が True のとき</span>
+<span class="kw">End If</span></div>
+        <div class="note">条件が True のときだけ処理を実行する。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="kw">If</span> a > <span class="num">10</span> <span class="kw">Then</span>
+    Cells(<span class="num">1</span>, <span class="num">1</span>).Value = <span class="str">"大きい"</span>
+<span class="kw">End If</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="条件" data-keywords="条件 そうでなければ Else 二択 どちらか">
+      <div class="ref-head">
+        <span class="want">条件を満たすときとそうでないときで処理を分けたい（If〜Else）</span>
+        <span class="cat-tag cat-条件">条件分岐</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">If</span> 条件 <span class="kw">Then</span>
+    <span class="cmt">' True のとき</span>
+<span class="kw">Else</span>
+    <span class="cmt">' False のとき</span>
+<span class="kw">End If</span></div>
+        <div class="note">Else 以降は条件が False のときに実行される。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="kw">If</span> a <span class="kw">Mod</span> <span class="num">2</span> = <span class="num">0</span> <span class="kw">Then</span>
+    Cells(rowA, <span class="num">1</span>).Value = a  <span class="cmt">' 偶数→A列</span>
+<span class="kw">Else</span>
+    Cells(rowB, <span class="num">2</span>).Value = a  <span class="cmt">' 奇数→B列</span>
+<span class="kw">End If</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="条件" data-keywords="条件 複数 ElseIf 3択 4択 複数条件">
+      <div class="ref-head">
+        <span class="want">3つ以上の条件で分けたい（ElseIf）</span>
+        <span class="cat-tag cat-条件">条件分岐</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">If</span> 条件1 <span class="kw">Then</span>
+    <span class="cmt">' 条件1 が True</span>
+<span class="kw">ElseIf</span> 条件2 <span class="kw">Then</span>
+    <span class="cmt">' 条件2 が True</span>
+<span class="kw">Else</span>
+    <span class="cmt">' どれも False</span>
+<span class="kw">End If</span></div>
+        <div class="example-label">使用例（FizzBuzz）</div>
+        <div class="example"><span class="kw">If</span> a <span class="kw">Mod</span> <span class="num">15</span> = <span class="num">0</span> <span class="kw">Then</span>
+    Cells(a,<span class="num">1</span>).Value = <span class="str">"FizzBuzz"</span>
+<span class="kw">ElseIf</span> a <span class="kw">Mod</span> <span class="num">3</span> = <span class="num">0</span> <span class="kw">Then</span>
+    Cells(a,<span class="num">1</span>).Value = <span class="str">"Fizz"</span>
+<span class="kw">ElseIf</span> a <span class="kw">Mod</span> <span class="num">5</span> = <span class="num">0</span> <span class="kw">Then</span>
+    Cells(a,<span class="num">1</span>).Value = <span class="str">"Buzz"</span>
+<span class="kw">Else</span>
+    Cells(a,<span class="num">1</span>).Value = a
+<span class="kw">End If</span></div>
+      </div>
+    </div>
+
+    <!-- ── 演算 ── -->
+    <div class="ref-card" data-cat="演算" data-keywords="余り 割り算 Mod 偶数 奇数 割り切れる 倍数">
+      <div class="ref-head">
+        <span class="want">割り算の余りを求めたい（Mod）</span>
+        <span class="cat-tag cat-演算">演算・計算</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">結果 = 数値 <span class="kw">Mod</span> 割る数</div>
+        <div class="note">余りが 0 → 割り切れる（偶数、3の倍数など）<br>余りが 1 → 割り切れない</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="num">10</span> <span class="kw">Mod</span> <span class="num">3</span>  <span class="cmt">' → 1</span>
+<span class="num">9</span>  <span class="kw">Mod</span> <span class="num">3</span>  <span class="cmt">' → 0 （3の倍数）</span>
+a   <span class="kw">Mod</span> <span class="num">2</span> = <span class="num">0</span>  <span class="cmt">' a が偶数なら True</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="演算" data-keywords="四則演算 足し算 引き算 掛け算 割り算 + - * / 計算">
+      <div class="ref-head">
+        <span class="want">足す・引く・かける・割るを計算したい</span>
+        <span class="cat-tag cat-演算">演算・計算</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">+ <span class="cmt">' 足し算</span>
+- <span class="cmt">' 引き算</span>
+* <span class="cmt">' 掛け算</span>
+/ <span class="cmt">' 割り算（小数あり）</span>
+\ <span class="cmt">' 整数除算（小数切捨て）</span></div>
+        <div class="example-label">使用例</div>
+        <div class="example">Cells(a,<span class="num">2</span>).Value = a * <span class="num">2</span>   <span class="cmt">' 2倍</span>
+Cells(a,<span class="num">3</span>).Value = a + <span class="num">10</span>  <span class="cmt">' 10足す</span>
+<span class="num">7</span> / <span class="num">2</span>   <span class="cmt">' → 3.5</span>
+<span class="num">7</span> \ <span class="num">2</span>   <span class="cmt">' → 3 （整数部分のみ）</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="演算" data-keywords="比較 大きい 小さい 等しい 以上 以下 = > < 比較演算子">
+      <div class="ref-head">
+        <span class="want">大小・等しいかを比べたい（比較演算子）</span>
+        <span class="cat-tag cat-演算">演算・計算</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">= <span class="cmt">' 等しい</span>
+&lt;&gt; <span class="cmt">' 等しくない</span>
+&gt;  <span class="cmt">' より大きい</span>
+&lt;  <span class="cmt">' より小さい</span>
+&gt;= <span class="cmt">' 以上</span>
+&lt;= <span class="cmt">' 以下</span></div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="kw">If</span> a = <span class="num">5</span> <span class="kw">Then</span>       <span class="cmt">' a が 5 のとき</span>
+<span class="kw">If</span> a >= <span class="num">10</span> <span class="kw">Then</span>    <span class="cmt">' a が 10 以上のとき</span>
+<span class="kw">If</span> a &lt;&gt; <span class="num">0</span> <span class="kw">Then</span>    <span class="cmt">' a が 0 でないとき</span></div>
+      </div>
+    </div>
+
+    <!-- ── 文字列 ── -->
+    <div class="ref-card" data-cat="文字列" data-keywords="文字列 つなげる 結合 連結 & アンパサンド">
+      <div class="ref-head">
+        <span class="want">文字列をつなげたい（&amp;）</span>
+        <span class="cat-tag cat-文字列">文字列</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">文字列1 &amp; 文字列2</div>
+        <div class="note">変数と文字を組み合わせて表示するときに使う。</div>
+        <div class="example-label">使用例</div>
+        <div class="example">Cells(<span class="num">1</span>,<span class="num">1</span>).Value = <span class="str">"合計："</span> &amp; goukei
+Cells(a,<span class="num">1</span>).Value = a &amp; <span class="str">"番"</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="文字列" data-keywords="数値 文字 変換 数値を文字に 文字を数値に CStr CInt">
+      <div class="ref-head">
+        <span class="want">数値と文字列を変換したい</span>
+        <span class="cat-tag cat-文字列">文字列</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="fn">CStr</span>(数値)   <span class="cmt">' 数値 → 文字列</span>
+<span class="fn">CInt</span>(文字列)  <span class="cmt">' 文字列 → 整数</span>
+<span class="fn">CDbl</span>(文字列)  <span class="cmt">' 文字列 → 小数</span></div>
+        <div class="example-label">使用例</div>
+        <div class="example">s = <span class="fn">CStr</span>(<span class="num">100</span>)     <span class="cmt">' s = "100"</span>
+n = <span class="fn">CInt</span>(<span class="str">"42"</span>)   <span class="cmt">' n = 42</span></div>
+      </div>
+    </div>
+
+    <!-- ── その他 ── -->
+    <div class="ref-card" data-cat="その他" data-keywords="メッセージ ポップアップ 表示 ダイアログ MsgBox 知らせる">
+      <div class="ref-head">
+        <span class="want">メッセージボックスを表示したい</span>
+        <span class="cat-tag cat-その他">その他</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="fn">MsgBox</span> <span class="str">"メッセージ"</span></div>
+        <div class="note">プログラムの途中・終了後に結果を知らせるときに便利。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="fn">MsgBox</span> <span class="str">"完了しました！"</span>
+<span class="fn">MsgBox</span> <span class="str">"合計："</span> &amp; goukei</div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="その他" data-keywords="コメント 説明 メモ ' 無効化 コメントアウト">
+      <div class="ref-head">
+        <span class="want">コードにメモ・説明を書きたい（コメント）</span>
+        <span class="cat-tag cat-その他">その他</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="cmt">' ここに説明を書く</span></div>
+        <div class="note">行頭または行末に <code>'</code> を書くと、その後ろは実行されない。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="cmt">' ループで 1〜n を出力する</span>
+<span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> n  <span class="cmt">' n 回繰り返す</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="その他" data-keywords="シート 移動 アクティブ シートを選ぶ Worksheets">
+      <div class="ref-head">
+        <span class="want">特定のシートを操作したい</span>
+        <span class="cat-tag cat-その他">その他</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax">Worksheets(<span class="str">"シート名"</span>).Cells(<span class="num">行</span>, <span class="num">列</span>).Value = 値</div>
+        <div class="note">省略するとアクティブシートが対象になる。</div>
+        <div class="example-label">使用例</div>
+        <div class="example">Worksheets(<span class="str">"Sheet1"</span>).Cells(<span class="num">1</span>,<span class="num">1</span>).Value = <span class="num">100</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" data-cat="その他" data-keywords="マクロ プロシージャ Sub End 作成 定義">
+      <div class="ref-head">
+        <span class="want">マクロ（プロシージャ）を作りたい</span>
+        <span class="cat-tag cat-その他">その他</span>
+      </div>
+      <div class="ref-body">
+        <div class="syntax-label">構文</div>
+        <div class="syntax"><span class="kw">Sub</span> <span class="fn">マクロ名</span>()
+    <span class="cmt">' ここに処理を書く</span>
+<span class="kw">End Sub</span></div>
+        <div class="note">ひとまとまりの処理に名前をつけて定義する。Excel から実行できる。</div>
+        <div class="example-label">使用例</div>
+        <div class="example"><span class="kw">Sub</span> <span class="fn">DisplayNumbers</span>()
+    <span class="kw">Dim</span> a <span class="kw">As Integer</span>
+    <span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> <span class="num">5</span>
+        Cells(a, <span class="num">1</span>).Value = a
+    <span class="kw">Next</span> a
+<span class="kw">End Sub</span></div>
+      </div>
+    </div>
+
+  </div><!-- /ref-grid -->
+</main>
+
+<footer>VBA プログラミング基礎 学習サイト &nbsp;|&nbsp; ビジネス系高等学校 プログラミング実務コース</footer>
+
+<script>
+  const input    = document.getElementById('search-input');
+  const clearBtn = document.getElementById('clear-btn');
+  const cards    = document.querySelectorAll('.ref-card');
+  const noResult = document.getElementById('no-result');
+  const noWord   = document.getElementById('no-result-word');
+  const catBtns  = document.querySelectorAll('.tag-btn');
+
+  let currentCat = 'all';
+
+  function filterCards() {
+    const q   = input.value.trim().toLowerCase();
+    const cat = currentCat;
+    let visible = 0;
+
+    cards.forEach(card => {
+      const keywords = (card.dataset.keywords + ' ' + card.querySelector('.want').textContent).toLowerCase();
+      const cardCat  = card.dataset.cat;
+      const matchQ   = q === '' || keywords.includes(q);
+      const matchCat = cat === 'all' || cardCat === cat;
+      if (matchQ && matchCat) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    noResult.style.display = visible === 0 ? 'block' : 'none';
+    noWord.textContent = q;
+    clearBtn.style.display = q ? 'block' : 'none';
+  }
+
+  input.addEventListener('input', filterCards);
+
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    filterCards();
+    input.focus();
+  });
+
+  catBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      catBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+      filterCards();
+    });
+  });
+</script>
+
+</body>
+</html>
