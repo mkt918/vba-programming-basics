@@ -210,6 +210,96 @@ function codeTable() {
   });
 }
 
+// ── プラス課題：仕様例表（n=3, ×1〜×9）────────────
+function plusSpecTable() {
+  const cols = Array(10).fill(Math.floor(CONTENT_W / 10));
+  cols[9] = CONTENT_W - cols[0] * 9; // 端数調整
+  const border = { style: BorderStyle.SINGLE, size: 1, color: "BBBBBB" };
+  const headers = ["行", "A(×1)", "B(×2)", "C(×3)", "D(×4)", "E(×5)", "F(×6)", "G(×7)", "H(×8)", "I(×9)"];
+  const data = [1, 2, 3].map(a => [String(a), ...Array.from({length:9}, (_,i) => String(a*(i+1)))]);
+  return new Table({
+    width: { size: CONTENT_W, type: WidthType.DXA },
+    columnWidths: cols,
+    rows: [
+      new TableRow({
+        children: headers.map((h, i) => new TableCell({
+          width: { size: cols[i], type: WidthType.DXA },
+          shading: { fill: C.HEADER_BG, type: ShadingType.CLEAR },
+          borders: { top: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"}, bottom: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"}, left: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"}, right: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"} },
+          margins: { top: 60, bottom: 60, left: 60, right: 60 },
+          children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: h, font: FONT, size: 16, bold: true, color: C.HEADER_FG })] })],
+        })),
+      }),
+      ...data.map(row =>
+        new TableRow({
+          height: { value: 380, rule: "exact" },
+          children: row.map((val, i) => new TableCell({
+            width: { size: cols[i], type: WidthType.DXA },
+            shading: { fill: C.WHITE, type: ShadingType.CLEAR },
+            borders: { top: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"}, bottom: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"}, left: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"}, right: {style:BorderStyle.SINGLE,size:1,color:"BBBBBB"} },
+            margins: { top: 60, bottom: 60, left: 60, right: 60 },
+            children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: val, font: FONT, size: 17 })] })],
+          })),
+        })
+      ),
+    ],
+  });
+}
+
+// ── プラス課題：穴埋めコード表（×3〜×9 を穴にする）──
+const PLUS_CODE_LINES = [
+  { no: "1",  code: "Sub TimesTable()" },
+  { no: "2",  code: "    Dim n As Integer" },
+  { no: "3",  code: "    Dim a As Integer" },
+  { no: "4",  code: '    n = InputBox("いくつまで表示しますか？")' },
+  { no: "5",  code: "    For a = 1 To n" },
+  { no: "6",  code: "        Cells(a, 1).Value = a          ' A列：連番（1倍）" },
+  { no: "7",  code: "        Cells(a, 2).Value = a * 2      ' B列：2倍" },
+  { no: "8",  code: "        Cells(a, [  ]).Value = a * [  ]  ' C列：3倍", hole: true },
+  { no: "9",  code: "        Cells(a, [  ]).Value = a * [  ]  ' D列：4倍", hole: true },
+  { no: "10", code: "        Cells(a, [  ]).Value = a * [  ]  ' E列：5倍", hole: true },
+  { no: "11", code: "        Cells(a, [  ]).Value = a * [  ]  ' F列：6倍", hole: true },
+  { no: "12", code: "        Cells(a, [  ]).Value = a * [  ]  ' G列：7倍", hole: true },
+  { no: "13", code: "        Cells(a, [  ]).Value = a * [  ]  ' H列：8倍", hole: true },
+  { no: "14", code: "        Cells(a, [  ]).Value = a * [  ]  ' I列：9倍", hole: true },
+  { no: "15", code: "    Next a" },
+  { no: "16", code: "End Sub" },
+];
+
+function plusCodeTable() {
+  const colNO   = 600;
+  const colCode = CONTENT_W - colNO;
+  const border  = { style: BorderStyle.SINGLE, size: 1, color: "BBBBBB" };
+  const borders = { top: border, bottom: border, left: border, right: border };
+  return new Table({
+    width: { size: CONTENT_W, type: WidthType.DXA },
+    columnWidths: [colNO, colCode],
+    rows: [
+      new TableRow({ children: [hcell("行", colNO), hcell("コード（[ ] に列番号と倍率を書こう）", colCode)] }),
+      ...PLUS_CODE_LINES.map(({ no, code, hole }) => {
+        const bg = hole ? C.HOLE_BG : C.WHITE;
+        return new TableRow({
+          height: { value: 420, rule: "exact" },
+          children: [
+            new TableCell({
+              width: { size: colNO, type: WidthType.DXA },
+              shading: { fill: bg, type: ShadingType.CLEAR },
+              borders, margins: { top: 60, bottom: 60, left: 100, right: 100 },
+              children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: no, font: "Courier New", size: 18 })] })],
+            }),
+            new TableCell({
+              width: { size: colCode, type: WidthType.DXA },
+              shading: { fill: bg, type: ShadingType.CLEAR },
+              borders, margins: { top: 60, bottom: 60, left: 120, right: 120 },
+              children: [new Paragraph({ children: [new TextRun({ text: code, font: "Courier New", size: 17 })] })],
+            }),
+          ],
+        });
+      }),
+    ],
+  });
+}
+
 // ── ドキュメント組み立て ────────────────────────────
 const doc = new Document({
   sections: [{
@@ -283,12 +373,36 @@ const doc = new Document({
       para("完成したら Excel に入力して動作を確認しましょう。", { indent: 200 }),
       ...emptyLines(1),
       codeTable(),
+
+      ...emptyLines(2),
+
+      // ── プラス課題 ──────────────────────────────────
+      new Paragraph({
+        spacing: { before: 200, after: 100 },
+        border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "e67e22" } },
+        shading: { fill: "FFF3E0", type: ShadingType.CLEAR },
+        children: [new TextRun({ text: "⭐ プラス課題　2倍〜9倍を全列に出力しよう", font: FONT, size: 22, bold: true, color: "e67e22" })],
+      }),
+      para("基本課題では A列に連番・B列に2倍を出力しました。", { indent: 200 }),
+      para("プラス課題では C列に3倍・D列に4倍・…・I列に9倍 まで一気に出力しましょう！", { indent: 200, bold: true }),
+      ...emptyLines(1),
+      para("例）n = 3 の場合（A〜I列）", { indent: 200 }),
+      ...emptyLines(1),
+      plusSpecTable(),
+      ...emptyLines(1),
+      para("【課題】薄黄の行の [ ] を埋めて完成させましょう。（ヒント：列番号と倍率は同じ数字になります）", { indent: 200, bold: true }),
+      ...emptyLines(1),
+      plusCodeTable(),
+      ...emptyLines(1),
+      para("◎ 発展：パターンに気づいたら、For〜Next を入れ子にしてまとめて書くことも挑戦してみよう！", { indent: 200, color: "666666" }),
     ],
   }],
 });
 
-const outPath = path.join(__dirname, "..", "worksheets", "step1", "task1_multi-column.docx");
+const outPaths = [
+  path.join(__dirname, "..", "worksheets", "step1", "task1_multi-column.docx"),
+  path.join(__dirname, "..", "docs", "downloads", "task1_multi-column.docx"),
+];
 Packer.toBuffer(doc).then(buf => {
-  fs.writeFileSync(outPath, buf);
-  console.log("生成完了:", outPath);
+  outPaths.forEach(p => { fs.writeFileSync(p, buf); console.log("生成完了:", p); });
 }).catch(err => { console.error(err); process.exit(1); });

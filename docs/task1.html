@@ -162,6 +162,76 @@
     </details>
   </div>
 
+  <!-- プラス課題 -->
+  <div class="card" style="border-top:3px solid #e67e22;">
+    <h3 data-icon="⭐">プラス課題　2倍〜9倍を全列に出力しよう</h3>
+    <p>基本課題では A列に連番・B列に2倍を出力しました。<br>
+    プラス課題では <strong>C列に3倍・D列に4倍・…・I列に9倍</strong> まで一気に出力しましょう！</p>
+
+    <p style="margin-top:.8rem;font-weight:bold;">例）n = 3 の場合（A〜I列）</p>
+    <div style="overflow-x:auto;margin-top:.5rem">
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>行</th><th>A列<br>×1</th><th>B列<br>×2</th><th>C列<br>×3</th><th>D列<br>×4</th>
+            <th>E列<br>×5</th><th>F列<br>×6</th><th>G列<br>×7</th><th>H列<br>×8</th><th>I列<br>×9</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1行目</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>
+          <tr><td>2行目</td><td>2</td><td>4</td><td>6</td><td>8</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td></tr>
+          <tr><td>3行目</td><td>3</td><td>6</td><td>9</td><td>12</td><td>15</td><td>18</td><td>21</td><td>24</td><td>27</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin-top:1.2rem;margin-bottom:.6rem;color:#e67e22;">【課題】コードの穴埋めをしよう</h4>
+    <p style="margin-bottom:.8rem;font-size:.9rem">薄黄の行の <code>[　　]</code> を埋めて完成させましょう。<br>
+    <span style="color:#888;font-size:.85rem">ヒント：列番号は A=1, B=2, C=3 … I=9 です。</span></p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <span>VBA (Excel マクロ)</span>
+        <span>Sub TimesTable</span>
+      </div>
+      <table class="code-table">
+        <tr><td class="ln">1</td><td><span class="kw">Sub</span> <span class="fn">TimesTable</span>()</td></tr>
+        <tr><td class="ln">2</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> n <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">3</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Dim</span> a <span class="kw">As Integer</span></td></tr>
+        <tr><td class="ln">4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;n = <span class="fn">InputBox</span>(<span class="str">"いくつまで表示しますか？"</span>)</td></tr>
+        <tr><td class="ln">5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">For</span> a = <span class="num">1</span> <span class="kw">To</span> n</td></tr>
+        <tr><td class="ln">6</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, <span class="num">1</span>).Value = a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt">' A列：連番（1倍）</span></td></tr>
+        <tr><td class="ln">7</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, <span class="num">2</span>).Value = a * <span class="num">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt">' B列：2倍</span></td></tr>
+        <tr class="hole-line"><td class="ln">8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, [&nbsp;&nbsp;]).Value = a * [&nbsp;&nbsp;]&nbsp;&nbsp;<span class="cmt">' C列：3倍</span></td></tr>
+        <tr class="hole-line"><td class="ln">9</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, [&nbsp;&nbsp;]).Value = a * [&nbsp;&nbsp;]&nbsp;&nbsp;<span class="cmt">' D列：4倍</span></td></tr>
+        <tr class="hole-line"><td class="ln">10</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, [&nbsp;&nbsp;]).Value = a * [&nbsp;&nbsp;]&nbsp;&nbsp;<span class="cmt">' E列：5倍</span></td></tr>
+        <tr class="hole-line"><td class="ln">11</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, [&nbsp;&nbsp;]).Value = a * [&nbsp;&nbsp;]&nbsp;&nbsp;<span class="cmt">' F列：6倍</span></td></tr>
+        <tr class="hole-line"><td class="ln">12</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, [&nbsp;&nbsp;]).Value = a * [&nbsp;&nbsp;]&nbsp;&nbsp;<span class="cmt">' G列：7倍</span></td></tr>
+        <tr class="hole-line"><td class="ln">13</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, [&nbsp;&nbsp;]).Value = a * [&nbsp;&nbsp;]&nbsp;&nbsp;<span class="cmt">' H列：8倍</span></td></tr>
+        <tr class="hole-line"><td class="ln">14</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cells(a, [&nbsp;&nbsp;]).Value = a * [&nbsp;&nbsp;]&nbsp;&nbsp;<span class="cmt">' I列：9倍</span></td></tr>
+        <tr><td class="ln">15</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">Next</span> a</td></tr>
+        <tr><td class="ln">16</td><td><span class="kw">End Sub</span></td></tr>
+      </table>
+    </div>
+
+    <details style="margin-top:.8rem">
+      <summary style="cursor:pointer;color:var(--blue);font-weight:bold;padding:.3rem 0">▶ 穴埋めの答えを見る</summary>
+      <div style="margin-top:.6rem;padding:.8rem;background:var(--blue-lt);border-radius:6px;font-size:.88rem">
+        <p>&nbsp;8行目：<code>Cells(a, <strong>3</strong>).Value = a * <strong>3</strong></code>　← C列・3倍</p>
+        <p>&nbsp;9行目：<code>Cells(a, <strong>4</strong>).Value = a * <strong>4</strong></code>　← D列・4倍</p>
+        <p>10行目：<code>Cells(a, <strong>5</strong>).Value = a * <strong>5</strong></code>　← E列・5倍</p>
+        <p>11行目：<code>Cells(a, <strong>6</strong>).Value = a * <strong>6</strong></code>　← F列・6倍</p>
+        <p>12行目：<code>Cells(a, <strong>7</strong>).Value = a * <strong>7</strong></code>　← G列・7倍</p>
+        <p>13行目：<code>Cells(a, <strong>8</strong>).Value = a * <strong>8</strong></code>　← H列・8倍</p>
+        <p>14行目：<code>Cells(a, <strong>9</strong>).Value = a * <strong>9</strong></code>　← I列・9倍</p>
+        <p style="margin-top:.6rem;color:#555">
+          ポイント：列番号と倍率は同じ数字になっています。<br>
+          パターンに気づいたら、さらに発展として「For〜Next を入れ子にしてまとめて書く」ことも挑戦してみましょう！
+        </p>
+      </div>
+    </details>
+  </div>
+
   <!-- ダウンロード -->
   <div class="dl-banner">
     <div class="dl-info">
